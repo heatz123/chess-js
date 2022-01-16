@@ -17,12 +17,13 @@
     margin: 0px 0px 0px 0px;
 
   /* disable any native browser highlighting */
-  -webkit-touch-callout: none;
+	  -webkit-touch-callout: none;
     -webkit-user-select: none;
      -khtml-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
+
 }
 .white {
     background-color: rgb(247, 220, 200);
@@ -46,6 +47,7 @@
     left: 0px;
     width: 49px;
     height: 49px;
+	
 }
 .selected { 
     box-shadow: inset 0 0 3px 3px yellow;
@@ -73,7 +75,8 @@ var selected = null;
 var PEN = null;
 var squares = null;
 var currentPositions = {
-    
+    0: "bB",
+    1: "bB",
 }
 
 function cloneObject(obj) {
@@ -89,24 +92,35 @@ function cloneObject(obj) {
   return clone;
 }
 
+function draw_board_instantly(positions) {
+    document.querySelectorAll(".chesspiece").forEach((el) => {
+        el.remove();
+    });
+
+
+    for (i in positions) {
+        let piece_type = positions[i];
+        html = '<img class="chesspiece" src="img/chesspieces/wikipedia/wP.png" />';
+        document.getElementById(i).innerHTML += html;
+    }
+}
+
+
 function process_select(id) {
     if (selected !== null) {
        var newPositions = cloneObject(currentPositions);
        delete newPositions[selected];
+		console.log(selected);
+		console.log(currentPositions);
+		console.log(newPositions);
         let piece_type = currentPositions[selected];
         newPositions[id] = piece_type;
-       
-       document.querySelectorAll(".chesspiece").forEach((el) => {
-            el.remove();
-        });
-        for (i in newPositions) {
-            let piece_type = newPositions[i];
-            html = '<img class="chesspiece" src="img/chesspieces/wikipedia/wP.png" />';
-            document.getElementById(i).innerHTML += html;
-        }
 
+       draw_board_instantly(newPositions);
+       
        document.getElementById(selected).classList.remove('selected');
        selected = null;
+       currentPositions = newPositions;
     }
     else {
         selected = id;
@@ -119,10 +133,15 @@ function clickEvent(e) {
     id = e.currentTarget.getAttribute('id');
     process_select(Number(id));
 }
-document.getElementById("1").addEventListener('click', clickEvent);
 document.querySelectorAll(".square").forEach((el) => {
     el.addEventListener('click', clickEvent);
 });
+
+document.body.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+});
+
+draw_board_instantly(currentPositions);
 </script>
 </body>
 
