@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.square {
+    text-align: left;
+    position: relative;
+    color: red;
+    width: 49px;
+    height: 49px;
+
+    border: none 0px;
+    box-sizing: content-box;
+
+    display: inline-block;
+    float: left;
+    margin: 0px 0px 0px 0px;
+
+  /* disable any native browser highlighting */
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+.white {
+    background-color: rgb(247, 220, 200);
+    color: rgb(220, 180, 150);
+}
+.black {
+    background-color: rgb(220, 180, 150);
+    color: rgb(247, 220, 200);
+}
+.nb {
+    position: absolute;
+    left: 4px;
+    top: 2px;
+    cursor: default;
+}
+
+.row {
+    padding: 0px;
+}
+.chesspiece {
+    left: 0px;
+    width: 49px;
+    height: 49px;
+}
+.selected { 
+    box-shadow: inset 0 0 3px 3px yellow;
+}
+.clearfix {
+    clear: both;
+}
+
+</style>
+</head>
+<body>
+<div class="row">
+	<div class="square white" id="1"><span class="nb">1</span><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
+    <div class="square black" id="2">2</div>
+    <div class="clearfix"></div>
+</div>
+<div class="row">
+	<div class="square white selected" id="3"><span class="nb">3</span></div>
+    <div class="square black" id="4"><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
+    <div class="clearfix">
+</div>
+
+<script>
+var selected = null;
+var PEN = null;
+var squares = null;
+var currentPositions = {
+    
+}
+
+function process_select(id) {
+    if (selected is not null) {
+       let piece_type = currentPositions[selected];
+        delete currentPositions[selected];
+         currentPositions[id-1] = piece_type;
+
+
+       document.querySelectorAll(".chesspiece").forEach((el) => {
+            el.remove();
+        });
+
+       document.querySelector(`#${id}`).classList.remove('selected');
+       selected = null;
+
+
+
+    }
+    else {
+        selected = id;
+        document.querySelector(`#${id}`).addAttribute('class', 'selected');
+
+    }
+}
+
+function clickEvent(e) {
+    id = e.currentTarget.getAttribute('id');
+    process_select(Number(id));
+}
+
+
+</script>
+</body>
+
+</html>
+
+
+
