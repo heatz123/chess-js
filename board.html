@@ -58,13 +58,13 @@
 </head>
 <body>
 <div class="row">
-	<div class="square white" id="1"><span class="nb">1</span><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
-    <div class="square black" id="2">2</div>
+	<div class="square white" id="0"><span class="nb">1</span><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
+    <div class="square black" id="1"></div>
     <div class="clearfix"></div>
 </div>
 <div class="row">
-	<div class="square white selected" id="3"><span class="nb">3</span></div>
-    <div class="square black" id="4"><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
+	<div class="square white selected" id="2"><span class="nb">3</span></div>
+    <div class="square black" id="3"><img class="chesspiece" src="img/chesspieces/wikipedia/bB.png"/></div>
     <div class="clearfix">
 </div>
 
@@ -76,26 +76,41 @@ var currentPositions = {
     
 }
 
+function cloneObject(obj) {
+  var clone = {};
+  for (var key in obj) {
+    if (typeof obj[key] == "object" && obj[key] != null) {
+      clone[key] = cloneObject(obj[key]);
+    } else {
+      clone[key] = obj[key];
+    }
+  }
+
+  return clone;
+}
+
 function process_select(id) {
-    if (selected is not null) {
-       let piece_type = currentPositions[selected];
-        delete currentPositions[selected];
-         currentPositions[id-1] = piece_type;
-
-
+    if (selected !== null) {
+       var newPositions = cloneObject(currentPositions);
+       delete newPositions[selected];
+        let piece_type = currentPositions[selected];
+        newPositions[id] = piece_type;
+       
        document.querySelectorAll(".chesspiece").forEach((el) => {
             el.remove();
         });
+        for (i in newPositions) {
+            let piece_type = newPositions[i];
+            html = '<img class="chesspiece" src="img/chesspieces/wikipedia/wP.png" />';
+            document.getElementById(i).innerHTML += html;
+        }
 
-       document.querySelector(`#${id}`).classList.remove('selected');
+       document.getElementById(selected).classList.remove('selected');
        selected = null;
-
-
-
     }
     else {
         selected = id;
-        document.querySelector(`#${id}`).addAttribute('class', 'selected');
+        document.getElementById(id).classList.add('selected');
 
     }
 }
@@ -104,8 +119,10 @@ function clickEvent(e) {
     id = e.currentTarget.getAttribute('id');
     process_select(Number(id));
 }
-
-
+document.getElementById("1").addEventListener('click', clickEvent);
+document.querySelectorAll(".square").forEach((el) => {
+    el.addEventListener('click', clickEvent);
+});
 </script>
 </body>
 
